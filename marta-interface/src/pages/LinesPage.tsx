@@ -1,11 +1,16 @@
 import TrainList from "../components/TrainList";
 
-export default function LinesPage() {
-  // initialize some currColor state
+interface LinesPageProps {
+    line_color: string;
+}
 
+export default function LinesPage({
+    line_color
+}: LinesPageProps) {
+  // initialize some currColor state
   return (
     <div>
-      <TrainList color={"green"} station={"Atlanta"} />
+      <TrainList color={line_color} />
     </div>
   );
 }
