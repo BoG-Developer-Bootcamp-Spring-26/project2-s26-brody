@@ -1,12 +1,10 @@
-import React from "react"
 
-interface TrainListProps extends React.ComponentProps<"div"> {
+interface TrainListProps {
     color: string;
 }
 
 export default function TrainList({
     color,
-    ...props
 } : TrainListProps) {
 
     return (
