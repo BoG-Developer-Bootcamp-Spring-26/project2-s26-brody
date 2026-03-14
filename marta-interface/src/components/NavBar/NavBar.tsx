@@ -1,4 +1,5 @@
 import './NavBar.css';
+import { colorMap } from '../../colorMap';
 
 interface NavBarProps {
     changeColor: (line_color: string) => void;
@@ -9,20 +10,16 @@ export default function NavBar({
     }: NavBarProps) {
     const line_colors = ["Gold", "Red", "Green", "Blue"];
 
-    const colorMap: Record<string, string> = {
-        Gold: '#EBCB18',
-        Red: '#C71C1C',
-        Green: '#22B54C',
-        Blue: '#1C6CA9'
-    };
-
     return (
         <div id="nav-container">
             {
                 line_colors.map((line_color) => {
                     return <button 
                         className='nav-color-button'
-                        style={{backgroundColor: colorMap[line_color]}}
+                        style={{
+                            backgroundColor: colorMap[line_color],
+                            fontFamily: 'ui-sans-serif',
+                        }}
                         onClick={() => changeColor(line_color)}>
                             {line_color}
                         </button>

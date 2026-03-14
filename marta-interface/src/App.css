@@ -11,10 +11,5 @@ body {
     width: 100%;
     min-height: 100vh;
     background-color: darkgray;
-
-    h1 {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 50px;
-    }
 }
 

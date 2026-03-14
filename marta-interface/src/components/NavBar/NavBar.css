@@ -9,7 +9,6 @@
     .nav-color-button {
         border-left: 1px solid black;
         border-right: 1px solid black;
-        font-family: 'Times New Roman', Times, serif;
         font-size: large;
 
         &:hover {

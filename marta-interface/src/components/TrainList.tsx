@@ -1,16 +1,17 @@
+import { useEffect } from "react";
 
 interface TrainListProps {
-    color: string;
+    lineColor: string;
 }
 
 export default function TrainList({
-    color,
+    lineColor,
 } : TrainListProps) {
 
     return (
         <div>
             <p>
-                Looking at train line {color}
+                Looking at train line {lineColor}
             </p>
         </div>
     );
