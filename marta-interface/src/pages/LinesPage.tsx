@@ -1,33 +1,47 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import TrainList from "../components/TrainList";
+import StationDrawer from "../components/StationDrawer/StationDrawer";
 
-interface LinesPageProps {
-    lineColor: string;
-}
-
-export default function LinesPage({
-    lineColor
-}: LinesPageProps) {
-    // states used for fetching our data
+export default function LinesPage() {
+  // Extract lineColor from the URL parameter
+  const { lineColor } = useParams(); 
+  
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
   const [error, setError] = useState<string | null>(null)
+  
+  const [arrivals, setArrivals] = useState(null);
+  const [stations, setStations] = useState(null);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    // If someone goes to a route without a lineColor -- exit early
+    if (!lineColor) return; 
+
     const controller = new AbortController();
-    const fetchData = async () => {
+    const fetchAllData = async () => {
         setLoading(true);
         setError(null);
+
         try {
-            const response = await fetch(
-                `https://midsem-bootcamp-api.onrender.com/arrivals/${lineColor}`,
-                { signal: controller.signal }
-            );
-            if (!response.ok) {
-                throw new Error(`Marta API error: ${response.status}`);
+            const [arrivalsResponse, stationsResponse] = await Promise.all([
+                fetch(`/api/arrivals/${lineColor}`, { signal: controller.signal }),
+                fetch(`/api/stations/${lineColor}`, { signal: controller.signal }),
+            ]);
+            if (!arrivalsResponse.ok || !stationsResponse.ok) {
+                throw new Error(`MARTA API error: Arrivals ${arrivalsResponse.status}, Stations ${stationsResponse.status}`);
             }
-            const result = await response.json();
-            setData(result);
+
+            const arrivalsResult = await arrivalsResponse.json();
+            const stationsResult = await stationsResponse.json();
+
+            setArrivals(arrivalsResult);
+            setStations(stationsResult)
+
+            // Logging to see, delete later
+            console.log(arrivals);
+            console.log(stations);
         } catch (e) {
             if (e instanceof Error && e.name !== 'AbortError') {
                 setError(e.message);
@@ -37,17 +51,17 @@ export default function LinesPage({
         }
     };
 
-    fetchData();
+    fetchAllData();
     return () => controller.abort()
-    },[lineColor])
+  }, [lineColor])
 
   return (
-    <div>
+    <div className="w-full">
         {/* Loading State */}
         {loading && (
             <div className="flex flex-col items-center py-10">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
-                <p className="mt-4 font-[Times New Roman]">Checking Marta Schedules...</p>
+                <p className="mt-4 font-sans">Checking Marta Schedules...</p>
             </div>
         )}
 
@@ -58,9 +72,20 @@ export default function LinesPage({
 
         {/* Successful fetch */}
         {!loading && !error && (
-            <div>
-                <TrainList lineColor={lineColor} />
-                <p>{data}</p>
+            <div className="flex flex-col items-center gap-4 mt-4">
+                <button 
+                    onClick={() => setIsOpen(true)}
+                    className="px-6 py-2 bg-black self-start ml-12 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                    View Stations
+                </button>
+                {/* <TrainList lineColor={lineColor!} data={data} /> */}
+                <TrainList lineColor={lineColor!} /> 
+                <StationDrawer 
+                    stations={stations} 
+                    isOpen={isOpen} 
+                    onClose={() => setIsOpen(false)} 
+                />
             </div>
         )}
     </div>

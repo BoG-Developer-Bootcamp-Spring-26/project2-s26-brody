@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 
 interface TrainListProps {
     lineColor: string;
