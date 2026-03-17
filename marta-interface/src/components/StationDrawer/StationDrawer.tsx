@@ -7,7 +7,6 @@ interface StationDrawerProps {
 }
 
 export default function StationDrawer({ stations, isOpen, onClose }: StationDrawerProps) {
-    const line_colors = ["Gold", "Red", "Green", "Blue"];
     const navigate = useNavigate();
 
     return (
@@ -46,10 +45,16 @@ export default function StationDrawer({ stations, isOpen, onClose }: StationDraw
                         <p className="text-gray-500 italic">Loading stations...</p>
                     ) : (
                         <div className="flex flex-col gap-2">
+                            <button 
+                                    className="text-left p-3 rounded-lg border hover:bg-gray-100 transition-colors cursor-pointer"
+                                    // add onClick logic later
+                                >
+                                    All Stations
+                                </button>
                             {stations.map((station, index) => (
                                 <button 
                                     key={index}
-                                    className="text-left p-3 rounded-lg border hover:bg-gray-100 transition-colors"
+                                    className="text-left p-3 rounded-lg border hover:bg-gray-100 transition-colors cursor-pointer"
                                     // add onClick logic later
                                 >
                                     {station}

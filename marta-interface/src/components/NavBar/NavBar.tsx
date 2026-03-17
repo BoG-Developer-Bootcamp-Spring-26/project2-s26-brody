@@ -12,13 +12,13 @@ export default function NavBar() {
                 line_colors.map((line_color) => {
                     return (
                         <button 
-                            key={line_color} // React needs this for lists!
+                            key={line_color}
                             className='nav-color-button'
                             style={{
                                 backgroundColor: colorMap[line_color],
                                 fontFamily: 'ui-sans-serif',
                             }}
-                            onClick={() => navigate(`/lines/${line_color}`)}>
+                            onClick={() => navigate(`/lines/${line_color.toLowerCase()}`)}>
                                 {line_color}
                         </button>
                     )

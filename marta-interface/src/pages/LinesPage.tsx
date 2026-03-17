@@ -16,7 +16,7 @@ export default function LinesPage() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // If someone goes to a route without a lineColor -- exit early
+    // If someone goes to a route without a lineColor -> exit early
     if (!lineColor) return; 
 
     const controller = new AbortController();
@@ -25,9 +25,10 @@ export default function LinesPage() {
         setError(null);
 
         try {
+            // fetch both arrivals and stations of each line
             const [arrivalsResponse, stationsResponse] = await Promise.all([
-                fetch(`/api/arrivals/${lineColor}`, { signal: controller.signal }),
-                fetch(`/api/stations/${lineColor}`, { signal: controller.signal }),
+                fetch(`/api/arrivals/${lineColor.toLowerCase()}`, { signal: controller.signal }),
+                fetch(`/api/stations/${lineColor.toLowerCase()}`, { signal: controller.signal }),
             ]);
             if (!arrivalsResponse.ok || !stationsResponse.ok) {
                 throw new Error(`MARTA API error: Arrivals ${arrivalsResponse.status}, Stations ${stationsResponse.status}`);
@@ -36,12 +37,12 @@ export default function LinesPage() {
             const arrivalsResult = await arrivalsResponse.json();
             const stationsResult = await stationsResponse.json();
 
+            console.log("Fresh Arrivals:", arrivalsResult);
+            console.log("Fresh Stations:", stationsResult);
+
             setArrivals(arrivalsResult);
             setStations(stationsResult)
 
-            // Logging to see, delete later
-            console.log(arrivals);
-            console.log(stations);
         } catch (e) {
             if (e instanceof Error && e.name !== 'AbortError') {
                 setError(e.message);
@@ -52,6 +53,7 @@ export default function LinesPage() {
     };
 
     fetchAllData();
+    // if line color changes before done, abort fetch and fetch new train line data
     return () => controller.abort()
   }, [lineColor])
 
