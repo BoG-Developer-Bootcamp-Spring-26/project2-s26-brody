@@ -27,8 +27,8 @@ export default function LinesPage() {
         try {
             // fetch both arrivals and stations of each line
             const [arrivalsResponse, stationsResponse] = await Promise.all([
-                fetch(`/api/arrivals/${lineColor.toLowerCase()}`, { signal: controller.signal }),
-                fetch(`/api/stations/${lineColor.toLowerCase()}`, { signal: controller.signal }),
+                fetch(`/api/arrivals/${lineColor.toLowerCase()}`),
+                fetch(`/api/stations/${lineColor.toLowerCase()}`),
             ]);
             if (!arrivalsResponse.ok || !stationsResponse.ok) {
                 throw new Error(`MARTA API error: Arrivals ${arrivalsResponse.status}, Stations ${stationsResponse.status}`);
